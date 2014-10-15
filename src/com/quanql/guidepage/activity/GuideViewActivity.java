@@ -27,6 +27,7 @@ public class GuideViewActivity extends Activity {
 
 	private ViewPager viewPager;
 	private ArrayList<View> pageViews;
+	private int pageViewsCount = 0;
 	private ImageView imageView;
 	private ImageView[] imageViews;
 	// 包裹滑动图片LinearLayout
@@ -56,27 +57,29 @@ public class GuideViewActivity extends Activity {
 		pageViews.add(inflater.inflate(R.layout.item01, null));
 		pageViews.add(inflater.inflate(R.layout.item02, null));
 		pageViews.add(inflater.inflate(R.layout.item03, null));
-		imageViews = new ImageView[pageViews.size()];
+		pageViewsCount = pageViews.size();
+		imageViews = new ImageView[pageViewsCount];
+		
 		main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
-
-		group = (ViewGroup) main.findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) main.findViewById(R.id.guidePages);
-//		imageViewLeft = (ImageView) main.findViewById(R.id.imageView1);
-//		imageViewRight = (ImageView) main.findViewById(R.id.imageView2);
-//		imageViewLeft.setAlpha(0);
-//		imageViewRight.setAlpha(0);
+		imageViewLeft = (ImageView) main.findViewById(R.id.imageViewLeft);
+		imageViewRight = (ImageView) main.findViewById(R.id.imageViewRight);
+		imageViewLeft.setAlpha(0);
+		imageViewRight.setAlpha(0);
+		group = (ViewGroup) main.findViewById(R.id.viewGroup);
 
 		// 将小圆点放到imageView数组当中
-		for (int i = 0; i < pageViews.size(); i++) {
+		for (int i = 0; i < pageViewsCount; i++) {
 			imageView = new ImageView(GuideViewActivity.this);
-			imageView.setLayoutParams(new LayoutParams(20, 20));
+			imageView.setLayoutParams(new LayoutParams(/*LayoutParams.WRAP_CONTENT*/ 30, 30));
 			imageView.setPadding(20, 0, 20, 0);
+//			imageView.setRight(10);
 			imageViews[i] = imageView;
 
 			if (i == 0) {
 				// 默认选中第一张图片
-				imageViews[i]
-						.setBackgroundResource(R.drawable.page_indicator_focused);
+			    
+				imageViews[i].setBackgroundResource(R.drawable.page_indicator_focused);
 			} else {
 				imageViews[i].setBackgroundResource(R.drawable.page_indicator);
 			}
@@ -88,8 +91,8 @@ public class GuideViewActivity extends Activity {
 
 		viewPager.setAdapter(new GuidePageAdapter());
 		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
-//		imageViewLeft.setOnClickListener(new ButtonListener());
-//		imageViewRight.setOnClickListener(new ButtonListener());
+		imageViewLeft.setOnClickListener(new ButtonListener());
+		imageViewRight.setOnClickListener(new ButtonListener());
 	}
 
 	// 左右切换屏幕的按钮监听器
@@ -99,20 +102,22 @@ public class GuideViewActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			int showNext = 0;
-			if (v.getId() == R.id.imageView1) {
+			if (v.getId() == R.id.imageViewLeft) {
 				System.out.println("点击了向左的按钮");
-				if (currentIndex == 0)
+				if (currentIndex == 0) {
 					showNext = currentIndex;
-				else
+				} else {
 					showNext = currentIndex - 1;
+				}
 				viewPager.setCurrentItem(showNext);
 			}
-			if (v.getId() == R.id.imageView2) {
+			if (v.getId() == R.id.imageViewRight) {
 				System.out.println("点击了向右的按钮");
-				if (currentIndex == imageViews.length)
+				if (currentIndex == imageViews.length) {
 					showNext = currentIndex;
-				else
+				} else {
 					showNext = currentIndex + 1;
+				}
 				viewPager.setCurrentItem(showNext);
 			}
 			System.out.println("当前页码：" + showNext);
@@ -124,34 +129,38 @@ public class GuideViewActivity extends Activity {
 	/**
 	 * 设置按钮渐显效果
 	 */
-/*	private Handler mHandler = new Handler() {
+	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 1 && mAlpha < 255) {
 				// 通过设置不透明度设置按钮的渐显效果
 				mAlpha += 50;
 
-				if (mAlpha > 255)
+				if (mAlpha > 255) {
 					mAlpha = 255;
+				}
 
 				imageViewLeft.setAlpha(mAlpha);
 				imageViewLeft.invalidate();
 				imageViewRight.setAlpha(mAlpha);
 				imageViewRight.invalidate();
 
-				if (!isHide && mAlpha < 255)
+				if (!isHide && mAlpha < 255) {
 					mHandler.sendEmptyMessageDelayed(1, 100);
+				}
 			} else if (msg.what == 0 && mAlpha > 0) {
 				mAlpha -= 3;
 
-				if (mAlpha < 0)
+				if (mAlpha < 0) {
 					mAlpha = 0;
+				}
 				imageViewLeft.setAlpha(mAlpha);
 				imageViewLeft.invalidate();
 				imageViewRight.setAlpha(mAlpha);
 				imageViewRight.invalidate();
 
-				if (isHide && mAlpha > 0)
+				if (isHide && mAlpha > 0) {
 					mHandler.sendEmptyMessageDelayed(0, 2);
+				}
 			}
 		}
 	};
@@ -190,7 +199,7 @@ public class GuideViewActivity extends Activity {
 
 		return super.dispatchTouchEvent(ev);
 	}
-*/
+
 	// 指引页面数据适配器,实现适配器方法
 	class GuidePageAdapter extends PagerAdapter {
 
@@ -266,12 +275,9 @@ public class GuideViewActivity extends Activity {
 		public void onPageSelected(int arg0) {
 			currentIndex = arg0;
 			for (int i = 0; i < imageViews.length; i++) {
-				imageViews[arg0]
-						.setBackgroundResource(R.drawable.page_indicator_focused);
-
+				imageViews[arg0].setBackgroundResource(R.drawable.page_indicator_focused);
 				if (arg0 != i) {
-					imageViews[i]
-							.setBackgroundResource(R.drawable.page_indicator);
+					imageViews[i].setBackgroundResource(R.drawable.page_indicator);
 				}
 			}
 		}
