@@ -1,8 +1,8 @@
-package com.quanql.demo01.activity;
+package com.quanql.guidepage.activity;
 
 import java.util.ArrayList;
 
-import com.quanql.demo01.R;
+import com.quanql.guidepage.R;
 
 import android.app.Activity;
 import android.os.Bundle;
