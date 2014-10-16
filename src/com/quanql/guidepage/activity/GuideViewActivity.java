@@ -12,33 +12,33 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
+//import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 /**
  * http://blog.csdn.net/wsscy2004/article/details/7611529
  */
 public class GuideViewActivity extends Activity {
-
+    private String TAG = "GuidePage";
 	private ViewPager viewPager;
-	private ArrayList<View> pageViews;
-	private int pageViewsCount = 0;
-	private int currentPos = 0;
-	private ImageView imgViRound; //圆点
-	private ImageView[] imageViews;
+	private ArrayList<View> pageViews; // 背景图
+	private int pageViewsCount = 0; // 背景图数量
+	private ImageView imgViewRound; // 圆点
+//	private ImageView[] imgViewRounds; // 存储点的数组
 	// 包裹滑动图片LinearLayout
 	private ViewGroup main;
 	// 包裹小圆点的LinearLayout
-	private ViewGroup group;
+	private ViewGroup viGroupRound;
 	// 左箭头按钮
-	private ImageView imageViewLeft;
+	private ImageView btnLeft;
 	// 右箭头按钮
-	private ImageView imageViewRight;
+	private ImageView btnRight;
 	// 当前页码
 	private int currentIndex;
 
@@ -59,69 +59,66 @@ public class GuideViewActivity extends Activity {
 		pageViews.add(inflater.inflate(R.layout.item02, null));
 		pageViews.add(inflater.inflate(R.layout.item03, null));
 		pageViewsCount = pageViews.size();
-		imageViews = new ImageView[pageViewsCount];
 		
 		main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
 		viewPager = (ViewPager) main.findViewById(R.id.guidePages);
-		imageViewLeft = (ImageView) main.findViewById(R.id.imageViewLeft);
-		imageViewRight = (ImageView) main.findViewById(R.id.imageViewRight);
-		imageViewLeft.setAlpha(0);
-		imageViewRight.setAlpha(0);
-		group = (ViewGroup) main.findViewById(R.id.viewGroup);
+		btnLeft = (ImageView) main.findViewById(R.id.imageViewLeft);
+		btnRight = (ImageView) main.findViewById(R.id.imageViewRight);
+		btnLeft.setAlpha(0);
+		btnRight.setAlpha(0);
+		viGroupRound = (ViewGroup) main.findViewById(R.id.viewGroup);
 		
 		initNavigationLayout();
 		
 		setContentView(main);
 		
 		viewPager.setAdapter(new GuidePageAdapter());
-		viewPager.setCurrentItem(currentPos);
+		viewPager.setCurrentItem(currentIndex);
 		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
-		imageViewLeft.setOnClickListener(new ButtonListener());
-		imageViewRight.setOnClickListener(new ButtonListener());
+		btnLeft.setOnClickListener(new ButtonListener());
+		btnRight.setOnClickListener(new ButtonListener());
 	}
 
 	/**
 	 * 初始化导航圆点
 	 */
 	private void initNavigationLayout() {
-		int count = pageViews.size();;
-		if (count > 1) {
-			for (int i = 0; i < count; i++) {
+		if (pageViewsCount > 1) {
+			for (int i = 0; i < pageViewsCount; i++) {
 				int resId = R.drawable.page_indicator;
-//				if (currentPos == i) {
 				if (0 == i) {
 					resId = R.drawable.page_indicator_focused;
 				}
-				imgViRound = new ImageView(this);
-				imgViRound.setImageResource(resId);
-				imgViRound.setPadding(0, 0, 20, 0);
-				imageViews[i] = imgViRound;
-				group.addView(imgViRound);
+				imgViewRound = new ImageView(this);
+				imgViewRound.setImageResource(resId);
+				imgViewRound.setPadding(0, 0, 20, 0);
+				viGroupRound.addView(imgViewRound);
 			}
-			group.setVisibility(View.VISIBLE);
+			viGroupRound.setVisibility(View.VISIBLE);
 		} else {
-			group.setVisibility(View.GONE);
+			viGroupRound.setVisibility(View.GONE);
 		}
 	}
 	
+/*
+    // 另一种实现方法
 	private void initNavigationLayout_Old() {
-		// 将小圆点放到imageView数组当中
 		for (int i = 0; i < pageViewsCount; i++) {
-			imgViRound = new ImageView(GuideViewActivity.this);
-			imgViRound.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, 30));
-			imgViRound.setPadding(20, 0, 20, 0);
-			imageViews[i] = imgViRound;
+			imgViewRound = new ImageView(GuideViewActivity.this);
+			imgViewRound.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, 30));
+			imgViewRound.setPadding(20, 0, 20, 0);
+			imgViewRounds[i] = imgViewRound;
 
 			if (i == 0) {
-				// 默认选中第一张图片
-				imageViews[i].setBackgroundResource(R.drawable.page_indicator_focused);
+				imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator_focused);
 			} else {
-				imageViews[i].setBackgroundResource(R.drawable.page_indicator);
+				imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator);
 			}
 
-			group.addView(imageViews[i]);
+			viGroupRound.addView(imgViewRounds[i]);
 		}
 	}
+	*/
 	
 	// 左右切换屏幕的按钮监听器
 	class ButtonListener implements OnClickListener {
@@ -130,7 +127,7 @@ public class GuideViewActivity extends Activity {
 		public void onClick(View v) {
 			int showNext = 0;
 			if (v.getId() == R.id.imageViewLeft) {
-				System.out.println("点击了向左的按钮");
+				Log.d(TAG, "点击了向左的按钮");
 				if (currentIndex == 0) {
 					showNext = currentIndex;
 				} else {
@@ -139,15 +136,15 @@ public class GuideViewActivity extends Activity {
 				viewPager.setCurrentItem(showNext);
 			}
 			if (v.getId() == R.id.imageViewRight) {
-				System.out.println("点击了向右的按钮");
-				if (currentIndex == imageViews.length) {
+				Log.d(TAG, "点击了向右的按钮");
+				if (currentIndex == pageViewsCount) {
 					showNext = currentIndex;
 				} else {
 					showNext = currentIndex + 1;
 				}
 				viewPager.setCurrentItem(showNext);
 			}
-			System.out.println("当前页码：" + showNext);
+			Log.d(TAG, "当前页码：" + showNext);
 		}
 
 	}
@@ -165,10 +162,10 @@ public class GuideViewActivity extends Activity {
 					mAlpha = 255;
 				}
 
-				imageViewLeft.setAlpha(mAlpha);
-				imageViewLeft.invalidate();
-				imageViewRight.setAlpha(mAlpha);
-				imageViewRight.invalidate();
+				btnLeft.setAlpha(mAlpha);
+				btnLeft.invalidate();
+				btnRight.setAlpha(mAlpha);
+				btnRight.invalidate();
 
 				if (!isHide && mAlpha < 255) {
 					mHandler.sendEmptyMessageDelayed(1, 100);
@@ -179,10 +176,10 @@ public class GuideViewActivity extends Activity {
 				if (mAlpha < 0) {
 					mAlpha = 0;
 				}
-				imageViewLeft.setAlpha(mAlpha);
-				imageViewLeft.invalidate();
-				imageViewRight.setAlpha(mAlpha);
-				imageViewRight.invalidate();
+				btnLeft.setAlpha(mAlpha);
+				btnLeft.invalidate();
+				btnRight.setAlpha(mAlpha);
+				btnRight.invalidate();
 
 				if (isHide && mAlpha > 0) {
 					mHandler.sendEmptyMessageDelayed(0, 2);
@@ -211,8 +208,8 @@ public class GuideViewActivity extends Activity {
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		System.out.println("this is dispatch");
-		System.out.println("触碰屏幕");
+		Log.d(TAG, "this is dispatch");
+		Log.d(TAG, "触碰屏幕");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_MOVE:
 		case MotionEvent.ACTION_DOWN: {
@@ -259,26 +256,19 @@ public class GuideViewActivity extends Activity {
 
 		@Override
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public Parcelable saveState() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public void startUpdate(View arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void finishUpdate(View arg0) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -287,28 +277,22 @@ public class GuideViewActivity extends Activity {
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
-			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onPageSelected(int arg0) {
 			currentIndex = arg0;
-			for (int i = 0; i < imageViews.length; i++) {
+			for (int i = 0; i < pageViewsCount; i++) {
 				int resId = R.drawable.page_indicator;
 				if (arg0 == i) {
 					resId = R.drawable.page_indicator_focused;
 				}
-				imageViews[i].setImageResource(resId);
-/*				imageViews[arg0].setBackgroundResource(R.drawable.page_indicator_focused);
-				if (arg0 != i) {
-					imageViews[i].setBackgroundResource(R.drawable.page_indicator);
-				}*/
+				imgViewRound = (ImageView)viGroupRound.getChildAt(i);
+				imgViewRound.setImageResource(resId);
 			}
 		}
 	}

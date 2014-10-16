@@ -27,6 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
+        android:contentDescription="往前翻页"
         android:src="@drawable/img_left" />
 
     <ImageView
@@ -36,6 +37,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="16dp"
+        android:contentDescription="往后翻页"
         android:src="@drawable/img_right" />
 
 </RelativeLayout>
