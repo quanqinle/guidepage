@@ -29,7 +29,7 @@ public class GuideViewActivity extends Activity {
 	private ArrayList<View> pageViews;
 	private int pageViewsCount = 0;
 	private int currentPos = 0;
-	private ImageView imageView;
+	private ImageView imgViRound; //圆点
 	private ImageView[] imageViews;
 	// 包裹滑动图片LinearLayout
 	private ViewGroup main;
@@ -92,11 +92,11 @@ public class GuideViewActivity extends Activity {
 				if (0 == i) {
 					resId = R.drawable.page_indicator_focused;
 				}
-				imageView = new ImageView(this);
-				imageView.setImageResource(resId);
-				imageView.setPadding(0, 0, 20, 0);
-				imageViews[i] = imageView;
-				group.addView(imageView);
+				imgViRound = new ImageView(this);
+				imgViRound.setImageResource(resId);
+				imgViRound.setPadding(0, 0, 20, 0);
+				imageViews[i] = imgViRound;
+				group.addView(imgViRound);
 			}
 			group.setVisibility(View.VISIBLE);
 		} else {
@@ -107,10 +107,10 @@ public class GuideViewActivity extends Activity {
 	private void initNavigationLayout_Old() {
 		// 将小圆点放到imageView数组当中
 		for (int i = 0; i < pageViewsCount; i++) {
-			imageView = new ImageView(GuideViewActivity.this);
-			imageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, 30));
-			imageView.setPadding(20, 0, 20, 0);
-			imageViews[i] = imageView;
+			imgViRound = new ImageView(GuideViewActivity.this);
+			imgViRound.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, 30));
+			imgViRound.setPadding(20, 0, 20, 0);
+			imageViews[i] = imgViRound;
 
 			if (i == 0) {
 				// 默认选中第一张图片
