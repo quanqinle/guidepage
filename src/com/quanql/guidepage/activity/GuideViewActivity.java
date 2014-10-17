@@ -27,7 +27,8 @@ import android.widget.ImageView;
 public class GuideViewActivity extends Activity {
     private String TAG = "GuidePage";
 	private ViewPager viewPager;
-	private ArrayList<View> pageViews; // 背景图
+	private View pageView; // 背景图
+	private ArrayList<View> listPageView; // 背景图数组
 	private int pageViewsCount = 0; // 背景图数量
 	private ImageView imgViewRound; // 圆点
 //	private ImageView[] imgViewRounds; // 存储点的数组
@@ -54,11 +55,14 @@ public class GuideViewActivity extends Activity {
 
 		// 将要显示的图片放到ArrayList当中，存到适配器中
 		LayoutInflater inflater = getLayoutInflater();
-		pageViews = new ArrayList<View>();
-		pageViews.add(inflater.inflate(R.layout.item01, null));
-		pageViews.add(inflater.inflate(R.layout.item02, null));
-		pageViews.add(inflater.inflate(R.layout.item03, null));
-		pageViewsCount = pageViews.size();
+		listPageView = new ArrayList<View>();
+		listPageView.add(inflater.inflate(R.layout.item01, null));
+		listPageView.add(inflater.inflate(R.layout.item02, null));
+		pageView = inflater.inflate(R.layout.guide_page, null);
+		((ImageView) pageView.findViewById(R.id.img_guide)).setImageResource(R.drawable.img_3);
+		((ImageView) pageView.findViewById(R.id.img_guide)).setScaleType(ImageView.ScaleType.CENTER);
+		listPageView.add(pageView);
+		pageViewsCount = listPageView.size();
 		
 		main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
 		viewPager = (ViewPager) main.findViewById(R.id.guidePages);
@@ -230,7 +234,7 @@ public class GuideViewActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			return pageViews.size();
+			return listPageView.size();
 		}
 
 		@Override
@@ -245,13 +249,13 @@ public class GuideViewActivity extends Activity {
 
 		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-			((ViewPager) arg0).removeView(pageViews.get(arg1));
+			((ViewPager) arg0).removeView(listPageView.get(arg1));
 		}
 
 		@Override
 		public Object instantiateItem(View arg0, int arg1) {
-			((ViewPager) arg0).addView(pageViews.get(arg1));
-			return pageViews.get(arg1);
+			((ViewPager) arg0).addView(listPageView.get(arg1));
+			return listPageView.get(arg1);
 		}
 
 		@Override
