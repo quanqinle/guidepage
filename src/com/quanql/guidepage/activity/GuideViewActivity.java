@@ -29,300 +29,297 @@ import android.widget.ImageView;
  */
 public class GuideViewActivity extends Activity {
     private String TAG = "GuidePage";
-	private ViewPager viewPager;
-	private View pageView; // 背景图
-	private ArrayList<View> listPageView; // 背景图数组
-	private int pageViewsCount = 0; // 背景图数量
-	private ImageView imgViewRound; // 圆点
-//	private ImageView[] imgViewRounds; // 存储点的数组
-	// 包裹滑动图片LinearLayout
-	private ViewGroup main;
-	// 包裹小圆点的LinearLayout
-	private ViewGroup viGroupRound;
-	// 左箭头按钮
-	private ImageView btnLeft;
-	// 右箭头按钮
-	private ImageView btnRight;
-	// 当前页码
-	private int currentIndex = 0;
+    private ViewPager viewPager;
+    private View pageView; // 背景图
+    private ArrayList<View> listPageView; // 背景图数组
+    private int pageViewsCount = 0; // 背景图数量
+    private ImageView imgViewRound; // 圆点
+    // private ImageView[] imgViewRounds; // 存储点的数组
+    // 包裹滑动图片LinearLayout
+    private ViewGroup main;
+    // 包裹小圆点的LinearLayout
+    private ViewGroup viGroupRound;
+    // 左箭头按钮
+    private ImageView btnLeft;
+    // 右箭头按钮
+    private ImageView btnRight;
+    // 当前页码
+    private int currentIndex = 0;
 
-	// ImageView的alpha值
-	private int mAlpha = 0;
-	private boolean isHide;
+    // ImageView的alpha值
+    private int mAlpha = 0;
+    private boolean isHide;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-		// 将要显示的图片放到ArrayList当中，存到适配器中
-		LayoutInflater inflater = getLayoutInflater();
-		listPageView = new ArrayList<View>();
-		listPageView.add(inflater.inflate(R.layout.item01, null)); // 设置背景，撑满空间，拉伸
-		listPageView.add(inflater.inflate(R.layout.item02, null)); // 等比缩放，超过截断
-		pageView = inflater.inflate(R.layout.guide_page, null);
-		((ImageView) pageView.findViewById(R.id.img_guide)).setImageDrawable(getResources().getDrawable(R.drawable.img_2));
-		listPageView.add(pageView);
-		pageView = inflater.inflate(R.layout.guide_page, null); // 必须重新赋值，否则报错！
-		((ImageView) pageView.findViewById(R.id.img_guide)).setImageResource(R.drawable.bg_guide_2); // setImageResource可能阻塞UI线程
-//		((ImageView) pageView.findViewById(R.id.img_guide)).setScaleType(ImageView.ScaleType.FIT_CENTER); // 按短边缩放，可能留白。cropCenter可以满足要求
-		Button btn = (Button) pageView.findViewById(R.id.button1);
-		btn.setVisibility(View.VISIBLE);
-		listPageView.add(pageView);
-		
-		pageViewsCount = listPageView.size();
-		
-		main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
-		viewPager = (ViewPager) main.findViewById(R.id.guidePages);
-		btnLeft = (ImageView) main.findViewById(R.id.imageViewLeft);
-		btnRight = (ImageView) main.findViewById(R.id.imageViewRight);
-		btnLeft.setAlpha(0);
-		btnRight.setAlpha(0);
-		viGroupRound = (ViewGroup) main.findViewById(R.id.viewGroup);
-		
-		initNavigationLayout();
-		
-		setContentView(main);
-		
-		viewPager.setAdapter(new GuidePageAdapter());
-		viewPager.setCurrentItem(currentIndex);
-		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
-		btnLeft.setOnClickListener(new ButtonListener());
-		btnRight.setOnClickListener(new ButtonListener());
-		btn.setOnClickListener(new OnClickListener() {
-            
+        // 将要显示的图片放到ArrayList当中，存到适配器中
+        LayoutInflater inflater = getLayoutInflater();
+        listPageView = new ArrayList<View>();
+        listPageView.add(inflater.inflate(R.layout.item01, null)); // 设置背景，撑满空间，拉伸
+        listPageView.add(inflater.inflate(R.layout.item02, null)); // 等比缩放，超过截断
+        pageView = inflater.inflate(R.layout.guide_page, null);
+        ((ImageView) pageView.findViewById(R.id.img_guide)).setImageDrawable(getResources().getDrawable(R.drawable.img_2));
+        listPageView.add(pageView);
+        pageView = inflater.inflate(R.layout.guide_page, null); // 必须重新赋值，否则报错！
+        ((ImageView) pageView.findViewById(R.id.img_guide)).setImageResource(R.drawable.bg_guide_2); // setImageResource可能阻塞UI线程
+        // ((ImageView)
+        // pageView.findViewById(R.id.img_guide)).setScaleType(ImageView.ScaleType.FIT_CENTER);
+        // // 按短边缩放，可能留白。cropCenter可以满足要求
+        Button btn = (Button) pageView.findViewById(R.id.button1);
+        btn.setVisibility(View.VISIBLE);
+        listPageView.add(pageView);
+
+        pageViewsCount = listPageView.size();
+
+        main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
+        viewPager = (ViewPager) main.findViewById(R.id.guidePages);
+        btnLeft = (ImageView) main.findViewById(R.id.imageViewLeft);
+        btnRight = (ImageView) main.findViewById(R.id.imageViewRight);
+        btnLeft.setAlpha(0);
+        btnRight.setAlpha(0);
+        viGroupRound = (ViewGroup) main.findViewById(R.id.viewGroup);
+
+        initNavigationLayout();
+
+        setContentView(main);
+
+        viewPager.setAdapter(new GuidePageAdapter());
+        viewPager.setCurrentItem(currentIndex);
+        viewPager.setOnPageChangeListener(new GuidePageChangeListener());
+        btnLeft.setOnClickListener(new ButtonListener());
+        btnRight.setOnClickListener(new ButtonListener());
+        btn.setOnClickListener(new OnClickListener() {
+
             @Override
             public void onClick(View v) {
-//                System.exit(0);
+                // System.exit(0);
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
-	}
+    }
 
-	/**
-	 * 初始化导航圆点
-	 */
-	private void initNavigationLayout() {
-		if (pageViewsCount > 1) {
-			for (int i = 0; i < pageViewsCount; i++) {
-				int resId = R.drawable.page_indicator;
-				if (0 == i) {
-					resId = R.drawable.page_indicator_focused;
-				}
-				imgViewRound = new ImageView(this);
-				imgViewRound.setImageResource(resId);
-				imgViewRound.setPadding(0, 0, 20, 0);
-				viGroupRound.addView(imgViewRound);
-			}
-			viGroupRound.setVisibility(View.VISIBLE);
-		} else {
-			viGroupRound.setVisibility(View.GONE);
-		}
-	}
-	
-/*
-    // 另一种实现方法
-	private void initNavigationLayout_Old() {
-		for (int i = 0; i < pageViewsCount; i++) {
-			imgViewRound = new ImageView(GuideViewActivity.this);
-			imgViewRound.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, 30));
-			imgViewRound.setPadding(20, 0, 20, 0);
-			imgViewRounds[i] = imgViewRound;
+    /**
+     * 初始化导航圆点
+     */
+    private void initNavigationLayout() {
+        if (pageViewsCount > 1) {
+            for (int i = 0; i < pageViewsCount; i++) {
+                int resId = R.drawable.page_indicator;
+                if (0 == i) {
+                    resId = R.drawable.page_indicator_focused;
+                }
+                imgViewRound = new ImageView(this);
+                imgViewRound.setImageResource(resId);
+                imgViewRound.setPadding(0, 0, 20, 0);
+                viGroupRound.addView(imgViewRound);
+            }
+            viGroupRound.setVisibility(View.VISIBLE);
+        } else {
+            viGroupRound.setVisibility(View.GONE);
+        }
+    }
 
-			if (i == 0) {
-				imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator_focused);
-			} else {
-				imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator);
-			}
+    /*
+     * // 另一种实现方法 private void initNavigationLayout_Old() { for (int i = 0; i <
+     * pageViewsCount; i++) { imgViewRound = new
+     * ImageView(GuideViewActivity.this); imgViewRound.setLayoutParams(new
+     * LayoutParams(LayoutParams.WRAP_CONTENT, 30)); imgViewRound.setPadding(20,
+     * 0, 20, 0); imgViewRounds[i] = imgViewRound;
+     * 
+     * if (i == 0) {
+     * imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator_focused
+     * ); } else {
+     * imgViewRounds[i].setBackgroundResource(R.drawable.page_indicator); }
+     * 
+     * viGroupRound.addView(imgViewRounds[i]); } }
+     */
 
-			viGroupRound.addView(imgViewRounds[i]);
-		}
-	}
-	*/
-	
-	/*
-	 * 左右切换屏幕的按钮监听器
-	*/
-	class ButtonListener implements OnClickListener {
+    /*
+     * 左右切换屏幕的按钮监听器
+     */
+    class ButtonListener implements OnClickListener {
 
-		@Override
-		public void onClick(View v) {
-			int showNext = 0;
-			if (v.getId() == R.id.imageViewLeft) {
-				Log.d(TAG, "点击了向左的按钮");
-				if (currentIndex == 0) {
-					showNext = currentIndex;
-				} else {
-					showNext = currentIndex - 1;
-				}
-				viewPager.setCurrentItem(showNext);
-			} else if (v.getId() == R.id.imageViewRight) {
-				Log.d(TAG, "点击了向右的按钮");
-				if (currentIndex == pageViewsCount) {
-					showNext = currentIndex;
-				} else {
-					showNext = currentIndex + 1;
-				}
-				viewPager.setCurrentItem(showNext);
-			}
-			Log.d(TAG, "当前页码：" + showNext);
-		}
+        @Override
+        public void onClick(View v) {
+            int showNext = 0;
+            if (v.getId() == R.id.imageViewLeft) {
+                Log.d(TAG, "点击了向左的按钮");
+                if (currentIndex == 0) {
+                    showNext = currentIndex;
+                } else {
+                    showNext = currentIndex - 1;
+                }
+                viewPager.setCurrentItem(showNext);
+            } else if (v.getId() == R.id.imageViewRight) {
+                Log.d(TAG, "点击了向右的按钮");
+                if (currentIndex == pageViewsCount) {
+                    showNext = currentIndex;
+                } else {
+                    showNext = currentIndex + 1;
+                }
+                viewPager.setCurrentItem(showNext);
+            }
+            Log.d(TAG, "当前页码：" + showNext);
+        }
 
-	}
+    }
 
-	/**
-	 * 设置按钮渐显效果
-	 */
-	private Handler mHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			if (msg.what == 1 && mAlpha < 255) {
-				// 通过设置不透明度设置按钮的渐显效果
-				mAlpha += 50;
+    /**
+     * 设置按钮渐显效果
+     */
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 1 && mAlpha < 255) {
+                // 通过设置不透明度设置按钮的渐显效果
+                mAlpha += 50;
 
-				if (mAlpha > 255) {
-					mAlpha = 255;
-				}
+                if (mAlpha > 255) {
+                    mAlpha = 255;
+                }
 
-				btnLeft.setAlpha(mAlpha);
-				btnLeft.invalidate();
-				btnRight.setAlpha(mAlpha);
-				btnRight.invalidate();
+                btnLeft.setAlpha(mAlpha);
+                btnLeft.invalidate();
+                btnRight.setAlpha(mAlpha);
+                btnRight.invalidate();
 
-				if (!isHide && mAlpha < 255) {
-					mHandler.sendEmptyMessageDelayed(1, 100);
-				}
-			} else if (msg.what == 0 && mAlpha > 0) {
-				mAlpha -= 3;
+                if (!isHide && mAlpha < 255) {
+                    mHandler.sendEmptyMessageDelayed(1, 100);
+                }
+            } else if (msg.what == 0 && mAlpha > 0) {
+                mAlpha -= 3;
 
-				if (mAlpha < 0) {
-					mAlpha = 0;
-				}
-				btnLeft.setAlpha(mAlpha);
-				btnLeft.invalidate();
-				btnRight.setAlpha(mAlpha);
-				btnRight.invalidate();
+                if (mAlpha < 0) {
+                    mAlpha = 0;
+                }
+                btnLeft.setAlpha(mAlpha);
+                btnLeft.invalidate();
+                btnRight.setAlpha(mAlpha);
+                btnRight.invalidate();
 
-				if (isHide && mAlpha > 0) {
-					mHandler.sendEmptyMessageDelayed(0, 2);
-				}
-			}
-		}
-	};
+                if (isHide && mAlpha > 0) {
+                    mHandler.sendEmptyMessageDelayed(0, 2);
+                }
+            }
+        }
+    };
 
-	private void showImageButtonView() {
-		isHide = false;
-		mHandler.sendEmptyMessage(1);
-	}
+    private void showImageButtonView() {
+        isHide = false;
+        mHandler.sendEmptyMessage(1);
+    }
 
-	private void hideImageButtonView() {
-		new Thread() {
-			public void run() {
-				try {
-					isHide = true;
-					mHandler.sendEmptyMessage(0);
-				} catch (Exception e) {
-					;
-				}
-			}
-		}.start();
-	}
+    private void hideImageButtonView() {
+        new Thread() {
+            public void run() {
+                try {
+                    isHide = true;
+                    mHandler.sendEmptyMessage(0);
+                } catch (Exception e) {
+                    ;
+                }
+            }
+        }.start();
+    }
 
-	/**
-	 * 重写activity的点击事件，使用消息处理按钮的渐隐渐现
-	 */
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		Log.d(TAG, "dispatchTouchEvent -> 触碰屏幕");
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_MOVE:
-		case MotionEvent.ACTION_DOWN: {
-			showImageButtonView();
-			break;
-			}
-		case MotionEvent.ACTION_UP: {
-			hideImageButtonView();
-			break;
-			}
-		}
+    /**
+     * 重写activity的点击事件，使用消息处理按钮的渐隐渐现
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d(TAG, "dispatchTouchEvent -> 触碰屏幕");
+        switch (ev.getAction()) {
+        case MotionEvent.ACTION_MOVE:
+        case MotionEvent.ACTION_DOWN: {
+            showImageButtonView();
+            break;
+        }
+        case MotionEvent.ACTION_UP: {
+            hideImageButtonView();
+            break;
+        }
+        }
 
-		return super.dispatchTouchEvent(ev);
-	}
+        return super.dispatchTouchEvent(ev);
+    }
 
-	/*
-	 * 指引页面数据适配器,实现适配器方法
-	*/
-	class GuidePageAdapter extends PagerAdapter {
+    /*
+     * 指引页面数据适配器,实现适配器方法
+     */
+    class GuidePageAdapter extends PagerAdapter {
 
-		@Override
-		public int getCount() {
-			return listPageView.size();
-		}
+        @Override
+        public int getCount() {
+            return listPageView.size();
+        }
 
-		@Override
-		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0 == arg1;
-		}
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
 
-		@Override
-		public int getItemPosition(Object object) {
-			return super.getItemPosition(object);
-		}
+        @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
+        }
 
-		@Override
-		public void destroyItem(View arg0, int arg1, Object arg2) {
-			((ViewPager) arg0).removeView(listPageView.get(arg1));
-		}
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView(listPageView.get(arg1));
+        }
 
-		@Override
-		public Object instantiateItem(View arg0, int arg1) {
-			((ViewPager) arg0).addView(listPageView.get(arg1));
-			return listPageView.get(arg1);
-		}
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView(listPageView.get(arg1));
+            return listPageView.get(arg1);
+        }
 
-		@Override
-		public void restoreState(Parcelable arg0, ClassLoader arg1) {
-		}
+        @Override
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {
+        }
 
-		@Override
-		public Parcelable saveState() {
-			return null;
-		}
+        @Override
+        public Parcelable saveState() {
+            return null;
+        }
 
-		@Override
-		public void startUpdate(View arg0) {
-		}
+        @Override
+        public void startUpdate(View arg0) {
+        }
 
-		@Override
-		public void finishUpdate(View arg0) {
-		}
-	}
+        @Override
+        public void finishUpdate(View arg0) {
+        }
+    }
 
-	/*
-	 * 指引页面更改事件监听器,左右滑动图片时候，小圆点变换显示当前图片位置
-	*/
-	class GuidePageChangeListener implements OnPageChangeListener {
+    /*
+     * 指引页面更改事件监听器,左右滑动图片时候，小圆点变换显示当前图片位置
+     */
+    class GuidePageChangeListener implements OnPageChangeListener {
 
-		@Override
-		public void onPageScrollStateChanged(int arg0) {
-		}
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
 
-		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
-		}
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
 
-		@Override
-		public void onPageSelected(int arg0) {
-			currentIndex = arg0;
-			for (int i = 0; i < pageViewsCount; i++) {
-				int resId = R.drawable.page_indicator;
-				if (arg0 == i) {
-					resId = R.drawable.page_indicator_focused;
-				}
-				imgViewRound = (ImageView)viGroupRound.getChildAt(i);
-				imgViewRound.setImageResource(resId);
-			}
-		}
-	}
+        @Override
+        public void onPageSelected(int arg0) {
+            currentIndex = arg0;
+            for (int i = 0; i < pageViewsCount; i++) {
+                int resId = R.drawable.page_indicator;
+                if (arg0 == i) {
+                    resId = R.drawable.page_indicator_focused;
+                }
+                imgViewRound = (ImageView) viGroupRound.getChildAt(i);
+                imgViewRound.setImageResource(resId);
+            }
+        }
+    }
 
 }
