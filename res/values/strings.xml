@@ -1,5 +1,7 @@
 <resources>
 
     <string name="app_name">用户引导demo</string>
+    <string name="btn_txt">关闭应用</string>
+    <string name="img_content_description">nothing</string>
 
 </resources>

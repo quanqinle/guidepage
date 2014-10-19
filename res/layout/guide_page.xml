@@ -5,12 +5,13 @@
 
     <ImageView
         android:id="@+id/img_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:adjustViewBounds="true"
-        android:scaleType="center" >
-
-    </ImageView>
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_3"
+        android:contentDescription="@string/img_content_description" />
 
     <Button
         android:id="@+id/button1"
@@ -19,6 +20,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="94dp"
-        android:text="Button" />
+        android:text="@string/btn_txt"
+        android:visibility="gone" />
 
 </RelativeLayout>

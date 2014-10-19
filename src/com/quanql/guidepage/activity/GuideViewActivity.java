@@ -18,11 +18,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 //import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 /**
- * http://blog.csdn.net/wsscy2004/article/details/7611529
+ * 参考：http://blog.csdn.net/wsscy2004/article/details/7611529
+ * 
+ * 模拟打开应用时的，用户/新功能引导页
  */
 public class GuideViewActivity extends Activity {
     private String TAG = "GuidePage";
@@ -41,7 +44,7 @@ public class GuideViewActivity extends Activity {
 	// 右箭头按钮
 	private ImageView btnRight;
 	// 当前页码
-	private int currentIndex;
+	private int currentIndex = 0;
 
 	// ImageView的alpha值
 	private int mAlpha = 0;
@@ -56,12 +59,18 @@ public class GuideViewActivity extends Activity {
 		// 将要显示的图片放到ArrayList当中，存到适配器中
 		LayoutInflater inflater = getLayoutInflater();
 		listPageView = new ArrayList<View>();
-		listPageView.add(inflater.inflate(R.layout.item01, null));
-		listPageView.add(inflater.inflate(R.layout.item02, null));
+		listPageView.add(inflater.inflate(R.layout.item01, null)); // 设置背景，撑满空间，拉伸
+		listPageView.add(inflater.inflate(R.layout.item02, null)); // 等比缩放，超过截断
 		pageView = inflater.inflate(R.layout.guide_page, null);
-		((ImageView) pageView.findViewById(R.id.img_guide)).setImageResource(R.drawable.img_3);
-		((ImageView) pageView.findViewById(R.id.img_guide)).setScaleType(ImageView.ScaleType.CENTER);
+		((ImageView) pageView.findViewById(R.id.img_guide)).setImageDrawable(getResources().getDrawable(R.drawable.img_2));
 		listPageView.add(pageView);
+		pageView = inflater.inflate(R.layout.guide_page, null); // 必须重新赋值，否则报错！
+		((ImageView) pageView.findViewById(R.id.img_guide)).setImageResource(R.drawable.bg_guide_2); // setImageResource可能阻塞UI线程
+//		((ImageView) pageView.findViewById(R.id.img_guide)).setScaleType(ImageView.ScaleType.FIT_CENTER); // 按短边缩放，可能留白。cropCenter可以满足要求
+		Button btn = (Button) pageView.findViewById(R.id.button1);
+		btn.setVisibility(View.VISIBLE);
+		listPageView.add(pageView);
+		
 		pageViewsCount = listPageView.size();
 		
 		main = (ViewGroup) inflater.inflate(R.layout.activity_guidepages, null);
@@ -81,6 +90,14 @@ public class GuideViewActivity extends Activity {
 		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
 		btnLeft.setOnClickListener(new ButtonListener());
 		btnRight.setOnClickListener(new ButtonListener());
+		btn.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+//                System.exit(0);
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
 	}
 
 	/**
@@ -124,7 +141,9 @@ public class GuideViewActivity extends Activity {
 	}
 	*/
 	
-	// 左右切换屏幕的按钮监听器
+	/*
+	 * 左右切换屏幕的按钮监听器
+	*/
 	class ButtonListener implements OnClickListener {
 
 		@Override
@@ -138,8 +157,7 @@ public class GuideViewActivity extends Activity {
 					showNext = currentIndex - 1;
 				}
 				viewPager.setCurrentItem(showNext);
-			}
-			if (v.getId() == R.id.imageViewRight) {
+			} else if (v.getId() == R.id.imageViewRight) {
 				Log.d(TAG, "点击了向右的按钮");
 				if (currentIndex == pageViewsCount) {
 					showNext = currentIndex;
@@ -210,10 +228,12 @@ public class GuideViewActivity extends Activity {
 		}.start();
 	}
 
+	/**
+	 * 重写activity的点击事件，使用消息处理按钮的渐隐渐现
+	 */
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		Log.d(TAG, "this is dispatch");
-		Log.d(TAG, "触碰屏幕");
+		Log.d(TAG, "dispatchTouchEvent -> 触碰屏幕");
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_MOVE:
 		case MotionEvent.ACTION_DOWN: {
@@ -229,7 +249,9 @@ public class GuideViewActivity extends Activity {
 		return super.dispatchTouchEvent(ev);
 	}
 
-	// 指引页面数据适配器,实现适配器方法
+	/*
+	 * 指引页面数据适配器,实现适配器方法
+	*/
 	class GuidePageAdapter extends PagerAdapter {
 
 		@Override
@@ -276,7 +298,9 @@ public class GuideViewActivity extends Activity {
 		}
 	}
 
-	// 指引页面更改事件监听器,左右滑动图片时候，小圆点变换显示当前图片位置
+	/*
+	 * 指引页面更改事件监听器,左右滑动图片时候，小圆点变换显示当前图片位置
+	*/
 	class GuidePageChangeListener implements OnPageChangeListener {
 
 		@Override
